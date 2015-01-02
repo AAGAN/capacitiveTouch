@@ -19,6 +19,7 @@
 #include <Adafruit_ILI9341.h>
 #include <Wire.h>      // this is needed for FT6206
 #include <Adafruit_FT6206.h>
+//#include "capacitiveTouch.h"
 
 // For the Adafruit shield, these are the default.
 #define TFT_DC 9
@@ -38,17 +39,81 @@ Adafruit_FT6206 ctp = Adafruit_FT6206();
 // If using the breakout, change pins as desired
 //Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST, TFT_MISO);
 
+class button
+{
+
+	// Class member variables
+	// These are initialized at the startup
+	boolean state; //The state of the button can be LOW or HIGH
+	String text; //The text displayed on the button
+	int width; //width of the button
+	int height; //height of the button
+	int x; // the x-coordinate of the upper left corner of the button
+	int y; // the y-coordinate of the upper lect corner of the button
+	uint16_t color;
+	int long previousTime;
+
+public:
+	button(boolean buttonState, String buttonText, int buttonWidth, 
+	int buttonHeight, int buttonX, int buttonY)
+	{          
+		state = buttonState;
+		text = buttonText;
+		if (buttonWidth> 6*buttonText.length()){width = buttonWidth;}
+		else{width = 6*buttonText.length()+1;}
+		height = buttonHeight;
+		x = buttonX;
+		y = buttonY;
+		color = ILI9341_BLACK;   
+		previousTime = 0;      
+		tft.fillRect(x,y,width,height,color);
+		tft.setCursor(x,y); 
+		tft.print(text);
+	}
+	
+	void update(int touchX,int touchY)
+	{
+		if (touchX < (x+width) && touchX > x){
+			if (touchY< (y+height) && touchY > y){
+				state = !state;
+				if (state){on();}else{off();}
+				tft.fillRect(x,y,width,height,color);
+				tft.setCursor(x,y);
+				tft.print(text);
+			}
+		}
+	}
+
+private:
+
+	void on()
+	{
+		color = ILI9341_DARKGREEN;
+	}
+
+	void off()
+	{
+		color = ILI9341_BLACK;
+	}
+
+
+};
+
+
+//button button1(LOW, "BUTTON", 30, 10, 100, 5);
+
 void setup() {
 
   tft.begin();
   tft.fillScreen(ILI9341_BLACK);
-  Serial.begin(9600);
+//  Serial.begin(9600);
 
   if (! ctp.begin(40)) {  // pass in 'sensitivity' coefficient
-//    Serial.println("Couldn't start FT6206 touchscreen controller");
     while (1);
   }
   tft.setRotation(2);
+  
+  
   drawGrid(nx ,ny); 
 }
 
