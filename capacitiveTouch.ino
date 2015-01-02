@@ -24,8 +24,8 @@
 #define TFT_DC 9
 #define TFT_CS 10
 
-int nx=10;
-int ny=10;
+int nx=8;
+int ny=8;
 int pxx=(240/nx)*3;
 int pyy=(320-240)+(240/ny)*3;
 int xx = 0;
@@ -83,10 +83,10 @@ void highlight(int x, int y, int nx, int ny, uint16_t color){
   int xx,yy,width,height;
   width=240/nx;
   height=240/ny;
-  xx = (x/width)*width;
-  yy = ((y-(320-240))/height)*height+(320-240);
-  tft.fillRect(xx,yy,width,height,color);
-  tft.drawRect(xx,yy,width,height,ILI9341_YELLOW);
+  xx = (x/width)*width+1;
+  yy = ((y-(320-240))/height)*height+(320-240)+1;
+  tft.fillRect(xx,yy,width-2,height-2,color);
+//  tft.drawRect(xx,yy,width,height,ILI9341_YELLOW);
 
 }
 
