@@ -35,40 +35,28 @@ void setup() {
 
   tft.begin();
   tft.fillScreen(ILI9341_BLACK);
-  Serial.begin(9600);
+ // Serial.begin(9600);
 
   if (! ctp.begin(40)) {  // pass in 'sensitivity' coefficient
 //    Serial.println("Couldn't start FT6206 touchscreen controller");
     while (1);
   }
+  tft.setRotation(2);
+  drawGrid(10 ,10); 
 }
 
 
-void loop(void) {
-
-  tft.setRotation(2);
-    
-    
-    
+void loop(void) {  
    if (! ctp.touched()) {
     return;
   }
   // Retrieve a point  
   TS_Point p = ctp.getPoint();
-  tft.fillScreen(ILI9341_BLACK);
+//  tft.fillScreen(ILI9341_BLACK);
+  tft.fillRect(85,0,155,8,ILI9341_BLACK);
   testText(p.x, p.y);  
-  tft.drawPixel(p.x,p.y,ILI9341_YELLOW);
-//  tft.drawRect(p.x-15,p.y-15,30,30,ILI9341_RED);
-  
-  drawGrid(24 ,24);
-  
-  Serial.print("width = ");
-  Serial.println(tft.width());
-  Serial.print("height= ");
-  Serial.println(tft.height());  
+  tft.drawPixel(p.x,p.y,ILI9341_YELLOW);  
 }
-
-
 
 void drawGrid(int i, int j){
   int x,y,width,height,ii,jj;
@@ -85,7 +73,7 @@ void drawGrid(int i, int j){
 
 void testText(int x, int y) {
 
-  tft.setCursor(0, 0);
+  tft.setCursor(85, 0);
   tft.setTextColor(ILI9341_WHITE);  
   tft.setTextSize(1);
 
