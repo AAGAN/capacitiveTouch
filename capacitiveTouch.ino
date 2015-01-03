@@ -19,7 +19,6 @@
 #include <Adafruit_ILI9341.h>
 #include <Wire.h>      // this is needed for FT6206
 #include <Adafruit_FT6206.h>
-//#include "capacitiveTouch.h"
 
 // For the Adafruit shield, these are the default.
 #define TFT_DC 9
@@ -41,16 +40,16 @@ Adafruit_FT6206 ctp = Adafruit_FT6206();
 
 class button
 {
-
 	// Class member variables
 	// These are initialized at the startup
-	boolean state; //The state of the button can be LOW or HIGH
 	String text; //The text displayed on the button
 	int width; //width of the button
 	int height; //height of the button
 	int x; // the x-coordinate of the upper left corner of the button
 	int y; // the y-coordinate of the upper lect corner of the button
 	uint16_t color;
+
+        boolean state; //The state of the button can be LOW or HIGH
 	int long previousTime;
 
 public:
@@ -64,11 +63,12 @@ public:
 		height = buttonHeight;
 		x = buttonX;
 		y = buttonY;
-		color = ILI9341_BLACK;   
+		color = ILI9341_RED;   
 		previousTime = 0;      
 		tft.fillRect(x,y,width,height,color);
 		tft.setCursor(x,y); 
 		tft.print(text);
+                Serial.println("Button created.");
 	}
 	
 	void update(int touchX,int touchY)
@@ -76,7 +76,7 @@ public:
 		if (touchX < (x+width) && touchX > x){
 			if (touchY< (y+height) && touchY > y){
 				state = !state;
-				if (state){on();}else{off();}
+//				if (state){on();}else{off();}
 				tft.fillRect(x,y,width,height,color);
 				tft.setCursor(x,y);
 				tft.print(text);
@@ -84,98 +84,46 @@ public:
 		}
 	}
 
-private:
-
-	void on()
-	{
-		color = ILI9341_DARKGREEN;
-	}
-
-	void off()
-	{
-		color = ILI9341_BLACK;
-	}
-
-
+//private:
+//
+//	void on()
+//	{
+//		color = ILI9341_DARKGREEN;
+//	}
+//
+//	void off()
+//	{
+//		color = ILI9341_BLACK;
+//	}
 };
-
-
-//button button1(LOW, "BUTTON", 30, 10, 100, 5);
 
 void setup() {
 
   tft.begin();
   tft.fillScreen(ILI9341_BLACK);
-//  Serial.begin(9600);
+  Serial.begin(9600);
 
   if (! ctp.begin(40)) {  // pass in 'sensitivity' coefficient
     while (1);
   }
   tft.setRotation(2);
-  
-  
-  drawGrid(nx ,ny); 
+  Serial.println("constructing the button...");
+  button button1(LOW, "BUTTON", 30, 10, 100, 5);
+  button button2(LOW, "BUTTON", 30, 30, 100, 5);
+  button button3(LOW, "BUTTON", 30, 50, 100, 5);
+  button button4(LOW, "BUTTON", 30, 70, 100, 5);
+  button button5(LOW, "BUTTON", 30, 90, 100, 5);
 }
-
 
 void loop(void) {  
    if (! ctp.touched()) {
     return;
   }
+  
   // Retrieve a point  
   TS_Point p = ctp.getPoint();
-  int width= 240/nx;
-  int height= 240/ny;
-  if ( xx != (p.x/width)*width || yy != ((p.y-(320-240))/height)*height+(320-240)){
-    if (p.y > (320-240-1) && (p.y != pyy || p.x != pxx)){
-      highlight(p.x,p.y,nx,ny,ILI9341_RED);
-      highlight(pxx,pyy,nx,ny,ILI9341_BLACK);
-      pxx = p.x;
-      pyy = p.y;
-      xx = (p.x/width)*width;
-      yy = ((p.y-(320-240))/height)*height+(320-240);
-    }
-  }
-  
-//  tft.fillScreen(ILI9341_BLACK);
-  tft.fillRect(0,0,240,8,ILI9341_BLACK);
-  testText(p.x, p.y);  
-//  tft.drawPixel(p.x,p.y,ILI9341_YELLOW);  
-}
-
-void highlight(int x, int y, int nx, int ny, uint16_t color){
-  
-  int xx,yy,width,height;
-  width=240/nx;
-  height=240/ny;
-  xx = (x/width)*width+1;
-  yy = ((y-(320-240))/height)*height+(320-240)+1;
-  tft.fillRect(xx,yy,width-2,height-2,color);
-}
-
-void drawGrid(int i, int j){
-  int x,y,width,height,ii,jj;
-  width=240/i;
-  height=240/j;
-  for (ii = 0; ii < i; ii++){
-    for (jj = 0; jj < j; jj++){
-        x=ii*width;
-        y=320-240+jj*height;
-        tft.drawRect(x,y,width,height,ILI9341_YELLOW);
-    }
+  if (p.x > 200){
+    Serial.println(p.x);
+    Serial.println(p.y);
   }
 }
-
-void testText(int x, int y) {
-
-  tft.setCursor(0, 0);
-  tft.setTextColor(ILI9341_WHITE);  
-  tft.setTextSize(1);
-
-  tft.print("x= ");
-  tft.print(x);
-
-  tft.print(" y= ");
-  tft.println(y);
-}   
-
