@@ -66,9 +66,9 @@ public:
 		color = ILI9341_RED;   
 		previousTime = 0;      
 		tft.fillRect(x,y,width,height,color);
-		tft.setCursor(x,y); 
+		tft.setCursor(x+1,y+1); 
 		tft.print(text);
-                Serial.println("Button created.");
+//                Serial.println("Button created.");
 	}
 	
 	void update(int touchX,int touchY)
@@ -76,54 +76,63 @@ public:
 		if (touchX < (x+width) && touchX > x){
 			if (touchY< (y+height) && touchY > y){
 				state = !state;
-//				if (state){on();}else{off();}
+				if (state){on();}else{off();}
 				tft.fillRect(x,y,width,height,color);
-				tft.setCursor(x,y);
+				tft.setCursor(x+1,y+1);
 				tft.print(text);
 			}
 		}
 	}
 
-//private:
-//
-//	void on()
-//	{
-//		color = ILI9341_DARKGREEN;
-//	}
-//
-//	void off()
-//	{
-//		color = ILI9341_BLACK;
-//	}
+private:
+
+	void on()
+	{
+		color = ILI9341_DARKGREEN;
+	}
+
+	void off()
+	{
+		color = ILI9341_RED;
+	}
 };
+
+
+//  Serial.println("constructing the button...");
+
 
 void setup() {
 
   tft.begin();
+  tft.setRotation(2);
   tft.fillScreen(ILI9341_BLACK);
-  Serial.begin(9600);
+//  Serial.begin(9600);
+
+
 
   if (! ctp.begin(40)) {  // pass in 'sensitivity' coefficient
     while (1);
   }
-  tft.setRotation(2);
-  Serial.println("constructing the button...");
-  button button1(LOW, "BUTTON", 30, 10, 100, 5);
-  button button2(LOW, "BUTTON", 30, 30, 100, 5);
-  button button3(LOW, "BUTTON", 30, 50, 100, 5);
-  button button4(LOW, "BUTTON", 30, 70, 100, 5);
-  button button5(LOW, "BUTTON", 30, 90, 100, 5);
+  
+    button button1(LOW, "BUTTON", 30, 10, 100, 5);
+    button button2(LOW, "BUTTON", 30, 10, 100, 25);
+    button button3(LOW, "BUTTON", 30, 10, 100, 45);
+    button button4(LOW, "BUTTON", 30, 10, 100, 65);
+    button button5(LOW, "BUTTON", 30, 10, 100, 85);
+
+
 }
 
 void loop(void) {  
    if (! ctp.touched()) {
     return;
   }
-  
   // Retrieve a point  
-  TS_Point p = ctp.getPoint();
-  if (p.x > 200){
-    Serial.println(p.x);
-    Serial.println(p.y);
-  }
+  TS_Point p = ctp.getPoint(); 
+  
+//  button1.update(p.x,p.y);
+//  button2.update(p.x,p.y);
+//  button3.update(p.x,p.y);
+//  button4.update(p.x,p.y);
+//  button5.update(p.x,p.y);
 }
