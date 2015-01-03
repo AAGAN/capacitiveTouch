@@ -151,8 +151,6 @@ void highlight(int x, int y, int nx, int ny, uint16_t color){
   xx = (x/width)*width+1;
   yy = ((y-(320-240))/height)*height+(320-240)+1;
   tft.fillRect(xx,yy,width-2,height-2,color);
-//  tft.drawRect(xx,yy,width,height,ILI9341_YELLOW);
-
 }
 
 void drawGrid(int i, int j){
