@@ -134,12 +134,13 @@ void loop(void) {
       pyy = p.y;
       xx = (p.x/width)*width;
       yy = ((p.y-(320-240))/height)*height+(320-240);
+      testText(p.x, p.y);  
     }
   }
   
 //  tft.fillScreen(ILI9341_BLACK);
-  tft.fillRect(0,0,240,8,ILI9341_BLACK);
-  testText(p.x, p.y);  
+//  tft.fillRect(0,0,240,8,ILI9341_BLACK);
+
 //  tft.drawPixel(p.x,p.y,ILI9341_YELLOW);  
 }
 
@@ -169,15 +170,29 @@ void drawGrid(int i, int j){
 }
 
 void testText(int x, int y) {
-
-  tft.setCursor(0, 0);
-  tft.setTextColor(ILI9341_WHITE);  
-  tft.setTextSize(1);
-
-  tft.print("x= ");
-  tft.print(x);
-
-  tft.print(" y= ");
-  tft.println(y);
+   
+//  tft.fillRect(0,0,240,8,ILI9341_BLACK);
+//  
+//  tft.setCursor(0, 0);
+//  tft.setTextColor(ILI9341_WHITE);  
+//  tft.setTextSize(1);
+//
+//  tft.print("x= ");
+//  tft.print(x);
+//
+//  tft.print(" y= ");
+//  tft.println(y);
+  if (y>320-240){
+      tft.fillRect(155,9,210,50,ILI9341_BLACK);
+      tft.setCursor(30,30);
+      tft.setTextColor(ILI9341_GREEN);
+      tft.setTextSize(3);
+      
+      int numBucket;
+      numBucket = (y-(320-240))/(240/ny)*8+x/(240/nx);
+      
+      tft.print("Bucket: ");
+      tft.print(64-numBucket);
+  }
 }   
 
